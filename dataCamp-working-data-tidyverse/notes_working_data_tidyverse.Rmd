@@ -1,0 +1,57 @@
+---
+title: "Notes -- Working with Data in the Tidyverse"
+output: html_notebook
+---
+
+## Import Data
+
+*Rectangular Data:* columns hold variables.
+
+Column values in the same row should correspond to the same observation.
+
+Package `readr`.
+
+### Reading CSV files
+
+```{r}
+library(readr)
+?read_csv
+```
+
+When reading the manual, you'll notice that some arguments have a default value assigned.
+
+> Default values are sensible. So it's good practice to start experimenting with arguments that don't have default values first.
+
+```{r}
+# Load readr
+library(readr)
+
+# Create bakeoff but skip first row
+bakeoff <- read_csv("bakeoff.csv", skip = 1)
+
+# Print bakeoff
+bakeoff
+```
+
+Our original import had 3 problems: we had 1 extra observation, our first row stored the true variable names, and all column types were characters. Adding `skip = 1` worked because the default argument for `col_names` is `TRUE`.
+
+### Assign Missing Values
+
+The `read_csv()` function also has an `na` argument, which allows you to specify value(s) that represent missing values in your data. The default values for the `na` argument are `c("", "NA")`, so both are recoded as missing (`NA`) in R. When you read in data, you can add additional values like the string "`UNKNOWN`" to a vector of missing values using the `c()` function to combine multiple values into a single vector.
+
+```{r}
+# Load dplyr
+library(dplyr)
+
+# Filter rows where showstopper is UNKNOWN 
+bakeoff %>% 
+    filter(showstopper == "UNKNOWN")
+
+# Edit to add list of missing values
+bakeoff <- read_csv("bakeoff.csv", skip = 1,
+                    na = c("", "NA", "UNKNOWN"))
+
+# Filter rows where showstopper is NA 
+bakeoff %>% filter(is.na(showstopper))
+```
+
