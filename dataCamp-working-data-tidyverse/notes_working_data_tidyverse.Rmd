@@ -1,6 +1,8 @@
 ---
 title: "Notes -- Working with Data in the Tidyverse"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ## Import Data
@@ -22,7 +24,7 @@ When reading the manual, you'll notice that some arguments have a default value 
 
 > Default values are sensible. So it's good practice to start experimenting with arguments that don't have default values first.
 
-```{r}
+```{r, eval=FALSE}
 # Load readr
 library(readr)
 
@@ -39,7 +41,7 @@ Our original import had 3 problems: we had 1 extra observation, our first row st
 
 The `read_csv()` function also has an `na` argument, which allows you to specify value(s) that represent missing values in your data. The default values for the `na` argument are `c("", "NA")`, so both are recoded as missing (`NA`) in R. When you read in data, you can add additional values like the string "`UNKNOWN`" to a vector of missing values using the `c()` function to combine multiple values into a single vector.
 
-```{r}
+```{r, eval=FALSE}
 # Load dplyr
 library(dplyr)
 
@@ -53,5 +55,16 @@ bakeoff <- read_csv("bakeoff.csv", skip = 1,
 
 # Filter rows where showstopper is NA 
 bakeoff %>% filter(is.na(showstopper))
+```
+
+```{r}
+starwars
+table(starwars$hair_color)
+
+nrow(starwars[starwars$hair_color == "brown",])
+
+starwars %>%
+  filter(hair_color == "brown") %>%
+  mutate(total = sum(n()))
 ```
 
