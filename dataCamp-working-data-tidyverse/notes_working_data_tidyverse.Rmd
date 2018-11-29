@@ -5,7 +5,9 @@ output:
     df_print: paged
 ---
 
-## Import Data
+## Explore your data
+
+### Import Data
 
 *Rectangular Data:* columns hold variables.
 
@@ -57,14 +59,14 @@ bakeoff <- read_csv("bakeoff.csv", skip = 1,
 bakeoff %>% filter(is.na(showstopper))
 ```
 
+### Know your data
+
+`glimpse`
+`skim`, from `skimr`
+
 ```{r}
-starwars
-table(starwars$hair_color)
-
-nrow(starwars[starwars$hair_color == "brown",])
-
-starwars %>%
-  filter(hair_color == "brown") %>%
-  mutate(total = sum(n()))
+library(skimr)
+glimpse(starwars)
+skim(starwars)
 ```
 
