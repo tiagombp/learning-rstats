@@ -21,3 +21,9 @@ tibble(ID = c(rep(1:3, 2), 4),
   select(-ID)
 
 
+# sugestão Sillas
+df <- tibble(ID = c(rep(1:3, 2), 4), 
+             Nombres = c("Felipe",  "Monica", "Jaime", "Jaime", "Jaime", "João", "Maria"))
+
+
+inner_join(df, df, by = "ID")
