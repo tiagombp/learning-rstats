@@ -1,0 +1,484 @@
+---
+title: "DataCamp - Data Visualization with ggvis"
+output: html_notebook
+---
+
+## Lesson 1 - The Grammar of Graphics
+
+### Section 1 - Intro to `ggvis`
+
+```{r}
+library(ggvis)
+# ggvis is already loaded
+
+# Change the code below to plot the disp variable of mtcars on the x axis
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
+ggplot(mtcars, aes(wt, mpg)) + geom_point() #geom_path(aes(color = "path")) + geom_line()
+```
+
+
+```{r}
+# The ggvis packages is loaded into the workspace already
+
+# Change the code below to make a graph with red points
+mtcars %>% ggvis(~wt, ~mpg, fill := "red") %>% layer_points()
+
+# Change the code below draw smooths instead of points
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths()
+
+# Change the code below to make a graph containing both points and a smoothed summary line
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>% layer_smooths()
+```
+
+### Section 2 - The grammar of `ggvis`
+
+ggvis follows the grammar of graphics. You can combine a set of data, properties and marks with the following format.
+
+```
+<data>  %>%
+  ggvis(~<x property>,~<y property>,
+        fill = ~<fill property>, ...) %>%
+  layer_<marks>()
+```
+
+```{r}
+pressure %>% ggvis(~temperature, ~pressure) %>% layer_points()
+
+# Adapt the code: show bars instead of points
+pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars()
+
+# Adapt the code: show lines instead of points
+pressure %>% ggvis(~temperature, ~pressure) %>% layer_lines()
+
+# Extend the code: map the fill property to the temperature variable
+pressure %>% ggvis(~temperature, ~pressure, fill = ~temperature) %>% layer_points()
+
+# Extend the code: map the size property to the pressure variable
+pressure %>% ggvis(~temperature, ~pressure, size = ~pressure) %>% layer_points()
+
+```
+
+#### 4 essential components of a graph
+
+Every ggvis graph contains 4 essential components: data, a coordinate system, marks and corresponding properties. By changing the values of each of these components you can create a vast array of unique plots.
+
+Which part in the following call corresponds to the marks element of the ggvis grammar?
+
+```{r}
+faithful %>%   # data
+    ggvis(~waiting, ~eruptions, fill := "red") %>% # mappings/properties
+    layer_points() %>% # marks 
+    add_axis("y", title = "Duration of eruption (m)",
+             values = c(2, 3, 4, 5), subdivide = 9) %>%
+    add_axis("x", title = "Time since previous eruption (m)")
+
+```
+
+## Lines and Syntax
+
+### Section 3 - Three new types of syntax
+
+#### Three operators: `%>%`, `=` and `:=`
+
+The pipe operator passes the result from its left-hand side into the first argument of the function on its right-hand side. `f(x) %>% g(y)` is a shortcut for `g(f(x), y)`.
+
+`=` maps a property to a data value or a set of data values. This is how you visualize variation in your data set. ggvis will scale the values appropriately and add a legend that explains how values are mapped to particular instances of the property.
+
+`:=` sets a property to a specific color (or size, width, etc.). This is how you customize the appearance of your plots. Numbers will be typically interpreted as pixels, such as size or displacement from the top-left hand corner of the plot. Color specifications are passed to vega, a javascript library, so you can use any color name recognized by HTML/CSS.
+
+```{r}
+# Rewrite the code with the pipe operator
+# layer_points(ggvis(faithful, ~waiting, ~eruptions))
+faithful %>% ggvis(~waiting, ~eruptions) %>% layer_points()
+
+# Modify this graph to map the size property to the pressure variable
+# pressure %>% ggvis(~temperature, ~pressure) %>% layer_points()
+pressure %>% ggvis(~temperature, ~pressure, size = ~pressure) %>% layer_points()
+
+# Modify this graph by setting the size property
+# pressure %>% ggvis(~temperature, ~pressure) %>% layer_points()
+pressure %>% ggvis(~temperature, ~pressure, size := 30) %>% layer_points()
+
+# Fix this code to set the fill property to red
+# pressure %>% ggvis(~temperature, ~pressure, fill = "red") %>% layer_points()
+pressure %>% ggvis(~temperature, ~pressure, fill := "red") %>% layer_points()
+
+```
+
+#### Referring to different objects
+
+You can refer to three different types of objects in your ggvis code: objects, variables, and raw values.
+
+* If you type a string of letters, `ggvis` will treat the string as an object name. It will look for an object with that name in your current environment.
+
+* If you place a tilde, `~`, at the start of the string, `ggvis` will treat the string as a variable name. It will look for the column with that name in the data set that the graph visualizes.
+
+* If you surround a string of letters with quotation marks, `ggvis` will treat the string as a raw value, e.g., a piece of text.
+
+#### Properties for points
+
+You can manipulate many different properties when using layer_points(), including `x`, `y`, `fill`, `fillOpacity`,  `opacity`, `shape`, `size`, `stroke `, `strokeOpacity`, and `strokeWidth`.
+
+The shape property recognizes several different values: `circle` (default), `square`, `cross`, `diamond`, `triangle-up`, and `triangle-down`.
+
+For a complete overview of `ggvis` [properties](http://ggvis.rstudio.com/properties-scales.html), you can consult the properties and scales vignette.
+
+```{r}
+# Add code
+faithful %>% ggvis(~waiting, ~eruptions, size = ~eruptions, opacity := 0.5, fill := "blue", stroke := "black") %>% layer_points()
+
+# Add code
+faithful %>% ggvis(~waiting, ~eruptions, fillOpacity = ~eruptions, size := 100, fill := "red", stroke := "red", shape := "cross") %>% layer_points()
+```
+
+### Section 4 - the line, a special type of mark
+
+#### Properties for lines
+
+In the previous section, you learned that you can manipulate many different properties when using the points mark. This mark type responds to, among others, `x`, `y`, `fill`, `fillOpacity`, `opacity`, `shape`, `size`, `stroke`, `strokeOpacity`, and `strokeWidth`.
+
+Similar to points, lines have specific properties; they respond to: `x`, `y`, `fill`, `fillOpacity`, `opacity`, `stroke`, `strokeDash`, `strokeOpacity`, and `strokeWidth`. Most of them are common to the properties for points, some are missing - there's no `size` property - and others are new, like `strokeDash`.
+
+
+```{r}
+# Update the code
+pressure %>% ggvis(~temperature, ~pressure, stroke := "red", strokeWidth := 2, strokeDash := 6) %>% layer_lines()
+```
+
+#### Path marks and polygons
+
+`layer_lines()` will always connect the points in your plot from the leftmost point to the rightmost point. This can be undesirable if you are trying to plot a specific shape.
+
+A dataframe texas is available in your workspace, containing the coordinates of the state of Texas; it is arranged such that consequent observations should be connected. The code on the right would plot a map of Texas if ggvis connected the points in the correct order.
+
+You can do this with layer_paths(): this mark connects the points in the order that they appear in the data set. So the paths mark will connect the point that corresponds to the first row of the data to the point that corresponds to the second row of data, and so on — no matter where those points appear in the graph.
+
+```{r}
+texas2 <- read.csv("texas.csv") # peguei o objeto usando o dput e copiando e colando o resultado. aí depois peguei o dataframe gerado e gravei nesse "texas.csv"
+
+# um exemplo da utilidade de se MAPEAR uma propriedade para valores fixos.
+texas %>% ggvis(~long, ~lat) %>% layer_lines(stroke = "line") %>% layer_paths(stroke = "path")
+
+# Update the plot
+texas %>% ggvis(~long, ~lat, fill := "darkorange", strokeDash := 10) %>%  layer_paths()
+```
+
+#### Display model fits
+
+`compute_model_prediction()` is a useful function to use with line graphs. It takes a data frame as input and returns a new data frame as output. The new data frame will contain the x and y values of a line fitted to the data in the original data frame.
+
+The code below computes a line that shows the relationship between the `eruptions` and `waiting` variables of the `faithful` data set.
+
+```{r}
+faithful %>%
+  compute_model_prediction(eruptions ~ waiting,
+                           model = "lm")
+```
+
+`compute_model_prediction()` takes a couple of arguments:
+
+* `faithful`, the dataset,
+
+* an R formula, `eruptions ~ waiting`, that specifies the relationship to model ("predicting eruptions with waiting")
+
+* a `model` argument, the name of the R modelling function that is used to calculate the line. `"lm"` calculates a _linear fit_, `"loess"` uses the _LOESS method_.
+
+`compute_smooth()` is a wrapper around `compute_model_prediction()` that calculates a LOESS smooth line by default.
+
+```{r}
+# Compute the x and y coordinates for a loess smooth line that predicts mpg with the wt
+mtcars %>% compute_smooth(mpg ~ wt)
+```
+
+#### `compute_smooth()` to simplify model fits
+
+`compute_smooth()` always returns a data set with two columns, one named `pred_` and one named `resp_`. You can easily pass this data to a `ggvis()` call to plot a smoothed line of your data, as this example shows:
+
+```{r}
+faithful %>%
+  compute_smooth(eruptions ~ waiting) %>%
+  ggvis(~pred_, ~resp_) %>%
+  layer_lines()
+```
+
+Because first calling `compute_smooth()` and then `layer_lines()` can be a bit of a hassle, `ggvis` features the `layer_smooths()` function: this layer automatically calls `compute_smooth()` in the background and plots the results as a smoothed line.
+
+```{r}
+# Extend with ggvis() and layer_lines()
+mtcars %>% compute_smooth(mpg ~ wt) %>% ggvis(~pred_, ~resp_) %>% layer_lines()
+
+# Extend with layer_points() and layer_smooths()
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>% layer_smooths()
+
+```
+
+## Transformations
+
+### Section 5 - Compute functions
+
+#### Histograms (1)
+
+A histogram - plotted using `layer_histograms()` - shows the distribution of a single continuous variable. The x axis is divided into evenly spaced intervals, known as bins. Above each bin, the histogram plots a rectangle. The height of the rectangle displays how many values of the variable fell within the range of the bin. As a result, the rectangles show how the frequency of values varies over the range of the variable.
+
+Different binwidths can reveal different types of information, so it's best to experiment with this. To change the width of the bins, you can specify the `width` argument inside `layer_histograms()`.
+
+```{r}
+# Build a histogram with a binwidth of 5 units
+faithful %>% ggvis(~waiting) %>% layer_histograms(width = 5)
+```
+
+#### Histograms (2)
+
+Instead of plotting data that appears directly in your dataset, `layer_histograms()` plots the counts of each bin on the y axis. Behind the scenes, `compute_bin()` calculates these counts. This function requires two arguments: a data set (which you will provide with `%>%`), and a variable name to bin on. You can additionally pass a `width` argument, to specify the binwidth. It returns a data frame that provides everything you need to build the histogram's rectangles with `layer_rects()`.
+
+Just as combining `compute_smooth()` and `layer_lines()` does the same as `layer_smooths()`, combining `compute_bin()` and `layer_rects()` does the same as  `layer_histograms()`. Can you spot the analogy?
+
+Instructions
+
+Fill the arguments of the `compute_bin()` function to calculate the counts for the `waiting` variable. The bins should have a width of 5. The output is a data frame with the columns:
+
+* `count_`
+* `x_`
+* `xmin_`
+* `xmax_`
+* `width_`
+
+Use `%>%` to add a `layer_rects()` call to the end of the command.
+
+To plot the rectangles correctly, you have to specify 4 properties in the `ggvis()` command: `x`, `x2`, `y` and `y2`. Fill in the missing mappings: `x2` should be mapped on `xmax_`, and `y2` should be mapped on `~count_`.
+
+
+```{r}
+str(faithful %>% compute_bin(~waiting))
+
+# Finish the command
+faithful %>%
+  compute_bin(~waiting, width = 5) %>%
+  ggvis(x = ~xmin_, x2 = ~xmax_, y = 0, y2 = ~count_) %>%
+  layer_rects()
+```
+
+#### Density plots
+
+Density plots provide another way to display the distribution of a single variable. A line displays the density of a variable at each point in its range. You can think of a density plot as a continuous version of a histogram with a different y scale (although this is not exactly accurate).
+
+You can build a density plot by combining `compute_density()` with `layer_lines()`. `compute_density()` takes two arguments, a data set and a variable name. It returns a data frame with two columns: `pred_`, the x values of the variable's density line, and `resp_`, the y values of the variable's density line.
+
+Just like `layer_histograms()` combines `compute_bin()` and `layer_rects()`, you can use `layer_densities()` to create density plots easily: it calls `compute_density()` and `layer_lines()` in the background.
+
+```{r}
+# Build the density plot
+faithful %>% ggvis(~waiting, fill:= "green") %>% layer_densities()
+
+# jeito "manual":
+faithful %>% compute_density(~waiting) %>% ggvis(~pred_, ~resp_, fill := "green") %>% layer_lines()
+
+faithful %>% compute_density(~waiting) %>% ggplot(aes(pred_, resp_), fill = "green") + geom_line()
+```
+
+
+#### Shortcuts
+
+You do not need to use a compute function to transform the variables in your data set. You can directly plot transformations of the variables.
+
+* Instead of `compute_smooth()` and `layer_lines()`, you can use `layer_smooths()`
+* Instead of `compute_bin()` and `layer_rects()`, you can use `layer_histograms()` 
+* Instead of `compute_density()` and `layer_lines()`, you can use `layer_densities()`
+
+Similar to the above, you can use `layer_bars()` to build a bar plot. In the background, it will use `compute_count()` and `layer_rects()` to do this. Have a look at an example of this in the editor, that plots a version of `cyl` that has been transformed into a factor (R's version of a categorical variable).
+
+```{r}
+
+mtcars %>%
+  compute_count(~factor(cyl)) %>%
+  ggvis(x = ~x_, y = 0, y2 = ~count_, width = band()) %>%
+  layer_rects()
+
+# Simplify the code
+mtcars %>%
+  ggvis(~factor(cyl)) %>%
+  layer_bars()
+
+```
+
+### Section 6 - ggvis and dplyr
+
+Consider:
+
+```{r}
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_paths()
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_lines()
+mtcars %>% ggvis(~wt, ~mpg) %>% arrange(wt) %>% layer_paths()
+```
+
+#### ggvis and group_by
+
+Have a look at the first line of code on the right: it uses the `group_by()` function from the `dplyr` package. Combined with `ggvis` commands, this leads to a plot with a separate smooth line for each unique value of the `am` variable (0 = automatic transmission; 1 = manual transmission).
+
+`group_by()` uses a grouping variable to organize a data set into several groups of observations. It places each observation into a group with other observations that have the same value of the grouping variable. In other words `group_by()` will create a separate group for each unique value of the grouping variable. When ggvis encounters grouped data, it will draw a separate mark for each group of observations.
+
+Change the first command: plot a unique smooth line for each value of the cyl variable. Note that you will also need to change the stroke property from am to cyl. Make sure to use categorical versions of the variables where needed.
+
+Add code to the second command to map fill to factor(cyl); this will clarify which density corresponds to which group of observations.
+
+```{r}
+# Both ggvis and dplyr are loaded into the workspace
+
+# Instruction 1
+mtcars %>% group_by(cyl) %>% ggvis(~mpg, ~wt, stroke = ~factor(cyl)) %>% layer_smooths()
+
+# Instruction 2
+mtcars %>% group_by(cyl) %>% ggvis(~mpg, fill = ~factor(cyl)) %>% layer_densities()
+```
+
+#### group_by() versus interaction()
+
+`group_by()` can group data based on the interaction of two or more variables. Simply pass multiple variable names:
+
+`my_data %>% group_by(<var1>, <var2>)`
+
+`group_by()` will create a separate group for each distinct combination of values within the grouping variables. 
+
+However, to also correctly map ggvis properties to unique combinations of multiple variables, you need an additional step: the `interaction()` function. The following example:
+
+`stroke = ~interaction(<var1>, <var2>)`
+
+will map stroke to the unique combinations of <var1> and <var2>.
+
+Alter the graph in the editor:
+
+* Adapt group_by() to display a separate density for each unique combination of cyl and am, in this order.
+* Map fill to the unique combinations of the grouping variables with ~interaction(cyl, am).
+
+```{r}
+# Alter the graph
+mtcars %>% group_by(cyl, am) %>% ggvis(~mpg, fill = ~interaction(cyl, am)) %>% layer_densities()
+```
+
+#### Chaining is a virtue
+
+You might have noticed that by now, the size of our chain of operations is becoming considerable. Using the pipe becomes even more useful! Let's retake the solution to the previous exercise:
+
+```{r}
+mtcars %>%
+    group_by(cyl, am) %>%
+    ggvis(~mpg, fill = ~interaction(cyl, am)) %>%
+    layer_densities()
+```
+
+This call is exactly equivalent to the following piece of code that is very hard to read:
+
+```{r}
+layer_densities(ggvis(group_by(mtcars, cyl, am), ~mpg, fill = ~interaction(cyl, am)))
+```
+
+The pipe efficiently solves the so-called _Dagwood sandwich problem_ that drives your functions and arguments further and further apart when building richer plots.
+
+However, you should always remember that the pipe is just a way to restructure your command rather than an actual operation. Which of the following statements is correct concerning the following line of code:
+
+```{r}
+mtcars %>%
+  group_by(am) %>%
+  ggvis(~mpg, ~hp) %>%
+  layer_smooths(stroke = ~factor(am)) %>%
+  layer_points(fill = ~factor(am))
+```
+
+
+## Interactivity and Layers
+
+### Section 7 - Interactive plots
+
+#### The basics of interactive plots
+
+The first lines of code on the right make a basic interactive plot. It includes a select box to change the shape of the points in the plot. The DataCamp interface only supports static plots, where the interactions are removed. The dynamic versions of this code - as they would appear in the RStudio IDE - can be found on DataCamp's Shiny Server to see and experiment with the interactive plot by changing the point shape. The command sets shape to a select box created with input_select(): the visualization updates on the fly if you update your selection.
+
+You can make your plots interactive by setting a property to the output of an input widget. ggvis comes with seven input widgets:
+
+* input_checkbox(),
+* input_checkboxgroup(),
+* input_numeric(),
+* input_radiobuttons(),
+* input_select(),
+* input_slider(), and
+* input_text().
+
+By default, each returns their current value as a number or character string.
+
+```{r}
+# Adapt the code: set fill with a select box
+faithful %>%
+  ggvis(~waiting, ~eruptions, fillOpacity := 0.5,
+        shape := input_select(label = "Choose shape:",
+                              choices = c("circle", "square", "cross",
+                                          "diamond", "triangle-up", "triangle-down")),
+        fill := input_select(label = "Choose color:",
+                             choices = c("black", "red", "blue", "green"))) %>%
+  layer_points()
+
+# Add radio buttons to control the fill of the plot
+mtcars %>%
+  ggvis(~mpg, ~wt,
+        fill := input_radiobuttons(label = "Choose color:",
+                                   choices = c("black", "red", "blue", "green"))) %>%
+  layer_points()
+```
+
+#### Input widgets in more detail
+
+Some input widgets provide choices for the user to select from. Others allow the user to provide their own input. For example, input_text() provides a text field for users to type input into. Instead of assigning input_text() a choices argument, you assign it a value argument: a character string to display when the plot first loads.
+
+For more details on the interactive controls, you can always consult the [ggvis interactivity vignette](http://ggvis.rstudio.com/interactivity.html).
+
+```{r}
+# Change the radiobuttons widget to a text widget
+mtcars %>%
+  ggvis(~mpg, ~wt,
+        fill := input_text(label = "Choose color:",
+                           value = "black")) %>%
+  layer_points()
+```
+
+#### Input widgets in more detail (2) (selecionar uma variável como critério para alguma propriedade visual)
+
+By default, input widgets return their values as character strings and numbers. To have a widget return its value as a variable name, you need to add the extra argument map = as.name.
+
+For example, the text widget in the command on the right will pass the character string "black" to the fill argument, which is useful for setting. If we add map = as.name to the arguments of input_text(), the widget would return ~black which is useful for mapping (or would be if black were a real variable in mtcars):
+
+In the command on the right, map fill to a select box that returns variable names. The label of this select box should read "Choose fill variable:" and create the choices with names(mtcars), as shown here. Use map = as.name inside input_select() to map the selection instead of setting it!
+
+```{r}
+# Map the fill property to a select box that returns variable names
+mtcars %>%
+  ggvis(~mpg, ~wt,
+  fill = input_select(label = "Choose fill variable:",
+                      choices = names(mtcars), ma = as.name)) %>%
+  layer_points()
+```
+
+#### Control parameters and values
+
+The previous exercises all manipulated properties of the ggvis plots, such as the shape and fill of points in scatterplots. As you will recall from earlier exercises, ggvis often needs additional parameters to build the correct graphs. You can also use widgets to control these parameters. Typically, you want to use the input_numeric() and input_slider() widgets to set numerical parameters.
+
+* Change the first graph coded on the right to map the binwidth to a numeric field that uses the label "Choose a binwidth:" and has a starting value of 1. The resulting plot should look like this.
+* Change the second graph to map binwidth to a slider bar that uses the label "Choose a binwidth:" and has a min value of 1 and a max value of 20. input_slider will place the initial value at (min + max) / 2. The plot you want to create can be found here.
+
+```{r}
+# Map the bindwidth to a numeric field ("Choose a binwidth:")
+mtcars %>%
+  ggvis(~mpg) %>%
+  layer_histograms(width = input_numeric(label = "Choose a binwidth:",
+                                         value = 1))
+
+# Map the binwidth to a slider bar ("Choose a binwidth:") with the correct specifications
+mtcars %>%
+  ggvis(~mpg) %>%
+  layer_histograms(width = input_slider(label = "Choose a binwidth:",
+                                        min = 1, max = 20,
+                                        value = (1+20)/2)) %>%
+  add_tooltip(html = function(data){paste0("Valor: ", data$mpg)})
+```
+
+### Section 8 - Multi-layered plots
+
+
