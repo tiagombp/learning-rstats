@@ -8,6 +8,7 @@ output: html_notebook
 ### Section 1 - Intro to `ggvis`
 
 ```{r}
+library(ggplot2)
 library(ggvis)
 # ggvis is already loaded
 
@@ -481,4 +482,164 @@ mtcars %>%
 
 ### Section 8 - Multi-layered plots
 
+#### Multi-layered plots and their properties
+
+You can create multi-layered plots by adding additional layers to a graph with the %>% syntax.
+
+If you set or map a property inside ggvis() it will be applied globally , every layer in the graph will use the property. If you set or map a property inside a layer_<marks>() function it will be applied locally: only the layer created by the function will use the property. Where applicable, local properties will override global properties.
+
+```{r}
+# Add a layer of points to the graph below.
+pressure %>%
+  ggvis(~temperature, ~pressure, stroke := "skyblue") %>%
+  layer_lines() %>%
+  layer_points()
+
+# Copy and adapt the solution to the first instruction below so that only the lines layer uses a skyblue stroke.
+pressure %>%
+  ggvis(~temperature, ~pressure) %>%
+  layer_lines(stroke := "skyblue") %>%
+  layer_points()
+```
+
+#### Multi-layered plots and their properties (2)
+
+Global properties can cause trouble when you use multiple layers. For example, the first ggvis command on the right causes an error since it also applies the shape property to layer_lines(), which does not use the shape property.
+
+```{r}
+# Rewrite the code below so that only the points layer uses the shape property.
+# pressure %>%
+#   ggvis(~temperature, ~pressure, shape := "triangle-up") %>%
+#   layer_lines(stroke := "skyblue") %>%
+#   layer_points()
+
+pressure %>%
+  ggvis(~temperature, ~pressure) %>%
+  layer_lines(stroke := "skyblue") %>%
+  layer_points(shape := "triangle-up")
+
+# Refactor the code for the graph below to make it as concise as possible
+# pressure %>%
+#   ggvis() %>%
+#   layer_lines(~temperature, ~pressure, stroke := "skyblue",
+#               strokeOpacity := 0.5, strokeWidth := 5) %>%
+#   layer_points(~temperature, ~pressure, fill = ~temperature,
+#               strokeOpacity := 0.5, shape := "triangle-up",
+#               stroke := "skyblue", size := 300, strokeWidth := 5)
+
+
+pressure %>%
+  ggvis(~temperature, ~pressure, 
+        strokeOpacity := 0.5, strokeWidth := 5, stroke := "skyblue") %>%
+  layer_lines(stroke := "skyblue") %>%
+  layer_points(fill = ~temperature, shape := "triangle-up", size := 300)
+
+
+```
+
+#### There is no limit on the number of layers!
+
+layer_model_predictions() plots the prediction line of a model fitted to the data. It is similar to layer_smooths() but you can extend it to more models than just the "loess" or "gam" model.
+
+layer_model_predictions() takes a parameter named model; it should be set to a character string that contains the name of an R model function. layer_model_predictions() will use this function to generate the model predictions. So for example, you could draw the model line of a linear model with:
+
+`layer_model_predictions(model = "lm")`
+
+Notice that model is a parameter, not a property. This means that you do not need to worry about setting vs. mapping. You can always set parameters with the equal sign, `=`.
+
+```{r}
+# Add more layers to the line plot
+pressure %>%
+  ggvis(~temperature, ~pressure) %>%
+  layer_lines(opacity := 0.5) %>%
+  layer_points() %>%
+  layer_model_predictions(model = "lm", stroke := "navy") %>%
+  layer_smooths(stroke := "skyblue")
+
+# ou, ao meu ver melhor, pq inclui automaticamente uma legenda
+# Add more layers to the line plot
+pressure %>%
+  ggvis(~temperature, ~pressure) %>%
+  layer_lines(opacity := 0.5) %>%
+  layer_points() %>%
+  layer_model_predictions(model = "lm", stroke = "Model predictions") %>%
+  layer_smooths(stroke = "Smooth")
+
+```
+#### Taking local and global to the next level
+
+In the first exercise set of this section, we mentioned that you can define local properties and global properties. Local properties will override global properties when applicable. When you copy the chunk of code below to the console and run it, you will see that it generates an error. Can you see why?
+
+```{r}
+pressure %>%
+  ggvis(~temperature, ~pressure, shape := "circle") %>%
+  layer_lines(stroke := "orange", strokeDash := 5, strokeWidth := 5) %>%
+  layer_points(size := 100, fill := "lightgreen") %>%
+  layer_smooths(stroke := "darkred")
+```
+
+What has to be done to (1) remove the error from the code and (2) set the stroke of the point marks to "darkred" like the smooth lines mark in a way that your code is as concise as possible?
+
+## Customizing
+
+### Section 9 - Axes and Legends
+
+#### Axes
+
+Axes help you to customize the plots you create with ggvis. add_axis() allows you to change the titles, tick schemes and positions of your axes. The example code below clarifies:
+
+```{r}
+add_axis("x", 
+         title = "axis title", 
+         values = c(1, 2, 3), 
+         subdivide = 5,
+         orient = "top")
+```
+
+* The first argument specifies which axis to customize.
+* title - the title of the axis you specified in the first argument.
+* values - determine where labelled tick marks will appear on each axis.
+* subdivide - insert unlabelled tick marks between the labelled tick marks on an axis.
+* orient - control where the axis appears. For the x axis, you can use "top" or "bottom", for the y axis, you can use "left" or "right".
+
+```{r}
+# Change the axes of the plot as instructed
+faithful %>% 
+  ggvis(~waiting, ~eruptions) %>% 
+  layer_points()
+
+faithful %>% 
+  ggvis(~waiting, ~eruptions) %>% 
+  layer_points() %>%
+  add_axis("x", title = "Time since previous eruption (m)", values = c(50, 60, 70, 80, 90), subdivide = 9, orient = "top") %>%
+  add_axis("y", title = "Duration of eruption (m)", values = c(2, 3, 4, 5), subdivide = 9, orient = "right")
+```
+
+#### Legends
+
+add_legend() works similarly to add_axis(), except that it alters the legend of a plot. The following example adds a legend for the fill property, with a meaningful title:
+
+```{r}
+pressure %>% 
+  ggvis(~temperature, ~pressure, fill = ~pressure) %>%
+  layer_points() %>%
+  add_legend("fill", title = "~ pressure")
+```
+
+```{r}
+# Add a legend
+faithful %>% 
+  ggvis(~waiting, ~eruptions, opacity := 0.6, 
+        fill = ~factor(round(eruptions))) %>% 
+  layer_points() %>%
+  add_legend("fill", title = "~ duration (m)", orient = "left")
+```
+
+#### Legends (2)
+
+If you don't use add_legend(), ggvis will automatically create a separate legend for each property that you map a variable on, which can lead to confusing results. For example, the code chunk in the editor creates three separate legends - for fill, one for shape, and one for size - and draws them each on top of each other.
+
+To solve this, you can specify a vector of property names as the first argument of the add_legend() call. For example, to combine a stroke legend with an opacity legend, you use:
+
+add_legend(c("stroke", "opacity"))
 
