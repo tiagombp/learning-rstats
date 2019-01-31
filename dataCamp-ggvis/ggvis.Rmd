@@ -794,3 +794,20 @@ mpg %>% ggvis(~cty, ~displ, fill = ~class) %>%
     }, "hover")
 ```
 
+```{r}
+mpg %>% ggvis(~cty, ~displ, column = ~class) %>%
+  layer_points()
+```
+
+```{r}
+library(vegalite)
+
+a<- vegalite() %>%
+  add_data(cars) %>%
+  encode_x("speed") %>%
+  encode_y("dist") %>%
+  mark_point()
+
+to_spec(a)
+```
+
