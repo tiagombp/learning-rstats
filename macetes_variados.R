@@ -7,7 +7,8 @@ as.Date(42705, origin = "1899-12-30")
 ggplot(mtcars, aes(wt, mpg)) + geom_path(aes(color = "path")) + geom_line(aes(color = "line"))
 
 
-#rstats performance tip: if you must grow a vector in a loop, make sure there's only one reference to it so that R doesn't have to make a copy on each iteration.
+
+# rstats performance tip: if you must grow a vector in a loop, make sure there's only one reference to it so that R doesn't have to make a copy on each iteration.
 
 # 6 seconds:
 x <- integer()
@@ -16,3 +17,28 @@ for(i in 1:5e4) x <- c(x, i)
 # 0.02 seconds:
 x <- integer()
 for(i in 1:5e4) x[i] <- i
+
+
+
+# Processa tabela da dívida
+
+recurso_TT <- resource_show(id="530e012d-1f9d-41a9-8cab-49849313e018", url="https://apickan.tesouro.gov.br/ckan")
+download.file(recurso_TT$url, destfile = "./exec_divida.csv", mode = 'wb')
+tabela <- read.csv2("exec_divida.csv")
+
+# Processamento dos dados 
+
+dados <- tabela %>%
+  mutate_at(vars(c("janeiro":"dezembro")), ~as.numeric(as.character(.))) %>% #(1)
+  gather(c("janeiro":"dezembro"), key = "Mês", value = "Valor") %>%
+  mutate(Valor = replace_na(Valor, 0))
+
+# (1) nova syntaxe do dplyr. para passar o range de variáveis, tive que sar o "vars".
+
+meses <- tibble(Mês = unique(dados$Mês), num_Mes = str_pad(1:12, 2, pad = "0")) # (2)
+
+# (2) beautiful, esse str_pad
+
+dados <- dados %>%
+  left_join(meses) %>%
+  mutate(Data = as.Date(paste(Exercício, num_Mes, "01", sep = "-")))
