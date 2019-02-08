@@ -20,7 +20,22 @@ for(i in 1:5e4) x[i] <- i
 
 
 
-# Processa tabela da dívida
+# filtrar pelo número da coluna
+mtcars %>% filter(.[2] == 6)
+
+
+
+# formatar eixo
++ scale_y_continuous(labels=function(x) {format(x, big.mark = ".", decimal.mark=",", scientific = FALSE)})
+
+# ou
+
++ scale_y_continuous(labels=scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE))
+
+
+
+
+# Processa tabela da dívida / Inconsistência seleção de variáveis dplyr, tidyr
 
 recurso_TT <- resource_show(id="530e012d-1f9d-41a9-8cab-49849313e018", url="https://apickan.tesouro.gov.br/ckan")
 download.file(recurso_TT$url, destfile = "./exec_divida.csv", mode = 'wb')
