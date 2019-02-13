@@ -57,3 +57,17 @@ meses <- tibble(Mês = unique(dados$Mês), num_Mes = str_pad(1:12, 2, pad = "0")
 dados <- dados %>%
   left_join(meses) %>%
   mutate(Data = as.Date(paste(Exercício, num_Mes, "01", sep = "-")))
+
+
+
+
+# preencher uma coluna com o último valor válido
+
+x <- data.frame(Titulos = rep(c("Prefixados", "Inflacao", "Cambio"),2), 
+                Emissao_Resgate = c("Emissao", NA, NA, "Resgate", NA, NA))
+                
+x %>% fill(Emissao_Resgate)
+# just like magic
+
+
+
