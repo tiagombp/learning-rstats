@@ -70,4 +70,19 @@ x %>% fill(Emissao_Resgate)
 # just like magic
 
 
+# expandir escala
+# https://ggplot2.tidyverse.org/reference/expand_scale.html
+scale_y_continuous(labels=function(x) {format(x/1e9, big.mark = ".", decimal.mark=",", scientific = FALSE)}, expand = expand_scale(mult = c(0, .1))) 
+
+expand_scale(mult = 0, add = 0)
+
+# Arguments
+# 
+# mult	
+# vector of multiplicative range expansion factors. If length 1, both the lower and upper limits of the scale are expanded outwards by mult. If length 2, the lower limit is expanded by mult[1] and the upper limit by mult[2].
+# 
+# add	
+# vector of additive range expansion constants. If length 1, both the lower and upper limits of the scale are expanded outwards by add units. If length 2, the lower limit is expanded by add[1] and the upper limit by add[2].
+
+
 
