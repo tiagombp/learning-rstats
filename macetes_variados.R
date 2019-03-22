@@ -86,3 +86,38 @@ expand_scale(mult = 0, add = 0)
 
 
 
+# detectar múltiplos padrões ----------------------------------------------
+
+# supondo que eu tenha: 
+palavras <- c(NA, NA, "Estoque anterior1", "DPMFi", "DPFe", NA, "Estoque mês em análise", 
+              "DPMFi", "DPFe", NA, "Variação Nominal", "DPMFi", "DPFe", NA, 
+              "I - Gestão da Dívida - TN (I.1 + I.2)", NA, "I.1 - Emissão/Resgate Líquido", 
+              NA, "I.1.1 - Emissões", "- Emissões Oferta Pública (DPMFi) 2", 
+              "- Trocas Ofertas Públicas (DPMFi)3", "- Emissões Diretas (DPMFi) 4", 
+              "- Emissões (DPFe) 5", NA)
+
+# se eu quiser detectar as ocorrências de uma lista de termos que está num vetor, por exemplo:
+termos_de_interesse <- c("DPMFi", "DPFe")
+
+# veja que o paste/collapse transforma o vetor numa string no formato que preciso para detectar múltiplos termos (ou seja, termos separados por "|"):
+paste(termos_de_interesse, collapse = "|")
+# > "DPMFi|DPFe"
+
+# posso usar:
+str_detect(palavras, paste(termos_de_interesse, collapse = "|"))
+# > c(NA, NA, FALSE, TRUE, TRUE, NA, FALSE, TRUE, TRUE, NA, FALSE, 
+# TRUE, TRUE, NA, FALSE, NA, FALSE, NA, FALSE, TRUE, TRUE, TRUE, 
+# TRUE, NA)
+
+# agora o melhor: se eu quiser que ele me retorne não se tem ou não um dos termos desejados, mas o próprio termo desejado que foi encontrado naquela posição do vetor de palavras, posso usar str_extract:
+str_extract(palavras, paste(termos_de_interesse, collapse = "|"))
+
+# que me retorna, lindamente:
+# > c(NA, NA, NA, "DPMFi", "DPFe", NA, NA, "DPMFi", "DPFe", NA, NA, 
+#   "DPMFi", "DPFe", NA, NA, NA, NA, NA, NA, "DPMFi", "DPMFi", "DPMFi", 
+#   "DPFe", NA)
+
+
+
+
+
