@@ -119,5 +119,25 @@ str_extract(palavras, paste(termos_de_interesse, collapse = "|"))
 
 
 
+# filtrar condicionalmente ------------------------------------------------
+
+a <- letters[1:4]
+b <- 1:4
+df <- tibble::tibble(a, b)
+
+match <- c("a", "b")
+
+match <- NULL
+
+library(tidyverse)
+
+df %>% filter(a %in% match)
+df %>% filter(TRUE)
+
+df %>% filter(ifelse(is.null(match), TRUE , a %in% match)) # não funciona
+df %>% filter(if_else(is.null(match), TRUE, a %in% match)) # dá erro por os valores em true e false serem de tipos/tamanhos diferentes (vetor x valor atômico)
+
+df %>% filter(if (is.null(match)) TRUE
+              else a %in% match)
 
 
