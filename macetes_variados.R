@@ -141,3 +141,16 @@ df %>% filter(if (is.null(match)) TRUE
               else a %in% match)
 
 
+
+# incluindo imagem / logo no rodape (ou outro lugar) ----------------------
+
+# como visto em: https://github.com/bbc/bbplot/blob/master/R/finalise_plot.R
+
+grafico <- ggplot2::ggplot(mpg, aes(displ, cyl)) + ggplot2::geom_point()
+rodape <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0,1), "npc"), y = grid::unit(1.1, "npc")),
+                         grid::textGrob("Fonte:", x = 0.004, hjust = 0, gp = grid::gpar(fontsize=16)),
+                         grid::rasterGrob(png::readPNG("logo_STN.png"), x = 0.9))
+
+ggpubr::ggarrange(grafico, rodape, ncol = 1, nrow = 2, 
+                  heights = c(1, 0.080))
+
