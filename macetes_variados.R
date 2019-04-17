@@ -154,3 +154,7 @@ rodape <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0,1), "npc"), y = grid
 ggpubr::ggarrange(grafico, rodape, ncol = 1, nrow = 2, 
                   heights = c(1, 0.080))
 
+
+# plotly ------------------------------------------------------------------
+
+line = list(shape = "spline") # With "spline" the lines are drawn using spline interpolation. Ficam suavizadas.
