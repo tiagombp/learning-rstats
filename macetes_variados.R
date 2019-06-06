@@ -158,3 +158,20 @@ ggpubr::ggarrange(grafico, rodape, ncol = 1, nrow = 2,
 # plotly ------------------------------------------------------------------
 
 line = list(shape = "spline") # With "spline" the lines are drawn using spline interpolation. Ficam suavizadas.
+
+
+
+# remover os ticks de um legenda de fill ou color -------------------------
+
+#dentro do scale_color ou scale_fill: guide = guide_colourbar(ticks = FALSE)
+# https://ggplot2.tidyverse.org/reference/guide_colourbar.html
+
+scale_color_viridis(#...
+                    guide = guide_colourbar(ticks = FALSE)) 
+
+
+
+# gganimate - remover o aspecto pixelado de linhas e pontos ---------------
+
+animate(#nome do objeto, 
+  type = "cairo")
