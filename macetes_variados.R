@@ -175,3 +175,16 @@ scale_color_viridis(#...
 
 animate(#nome do objeto, 
   type = "cairo")
+
+
+
+# acompanhar execução de código -------------------------------------------
+
+Uma dica complementar a isso é inserir comandos cat() no código para imprimir uma mensagem para ver em que ponto da execução o código tá
+
+
+# fazer transformações com base no {frame_along} em strings ---------------
+
+gif_linhas_dpf <- grafico_linha_dpf +
+  transition_reveal(Periodo) +
+  labs(subtitle = paste("Estoque atualizado pelo IPCA até {lubridate::year(frame_along)}/{meses[lubridate::month(frame_along)]}")) 
