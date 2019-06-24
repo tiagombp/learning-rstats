@@ -171,3 +171,18 @@ ggplot(desp_bahia_deflat, aes(y = valor, fill = variavel, x = as.character(Ano))
                  legend.text = element_text(size = 8, color = "grey40"),
                  legend.key.size = unit(0.1, "inches"))
 
+
+
+# filter_all --------------------------------------------------------------
+
+df <- data.frame(a = c(-2,  1, -2,  7,  2), 
+                 b = c( 6,  4, -1,  6, -3), 
+                 c = c(-5,  5, -4,  3,  2))
+
+df %>% 
+  mutate_all(.funs = list(`>0` = ~(. > 0))) %>%
+  mutate(or  = `a_>0` | `b_>0` | `c_>0`,
+         and = `a_>0` & `b_>0` & `c_>0`)
+
+df %>% filter_all(all_vars(. > 0))
+df %>% filter_all(any_vars(. > 0))
