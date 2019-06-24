@@ -197,3 +197,38 @@ str_view(x, "banana")
 str_view(x, "\\bbanana\\b")
 
 
+
+# iterate over something --------------------------------------------------
+
+vetor <- 1:10
+
+for (i in seq_along(vetor)) {
+  # do something
+}
+
+# Hadley's tip: avoid
+
+for (i in 1:length(vetor)) {
+  # do something
+}
+
+# because it fails in unhappy way if vetor has length 0
+
+
+# para usar o mutate scoped e dar nome às novas variáveis -----------------
+
+y <- data.frame(a = c(-2,  1, -2,  7,  2), 
+                b = c( 6,  4, -1,  6, -3), 
+                c = c(-5,  5, -4,  3,  2))
+
+y
+
+y %>% 
+  mutate_all(funs(. > 0)) %>%
+  mutate(or  = a | b | c,
+         and = a & b & c)
+
+y %>% 
+  mutate_all(.funs = list(`>0` = ~(. > 0))) %>%
+  mutate(or  = a | b | c,
+         and = a & b & c)
