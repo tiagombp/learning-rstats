@@ -1,3 +1,9 @@
+# https://github.com/tylermorganwall/rayshader
+
+# https://www.curso-r.com/blog/2019-02-10-sf-miojo/
+
+# https://www.tylermw.com/3d-ggplots-with-rayshader/
+
 library(rayshader)
 library(ggplot2)
 library(readxl)
