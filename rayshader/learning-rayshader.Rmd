@@ -1,0 +1,48 @@
+---
+title: "teste_rayshader"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+library(rayshader)
+library(ggplot2)
+library(readxl)
+library(tidyverse)
+library(brazilmaps)
+library(sf)
+library(viridis)
+library(extrafont)
+
+loadfonts()
+
+dados_ibge <- read_excel("ibge_mun.xls", sheet = "Variáveis externas")
+
+mapa <- get_brmap("City") 
+mapa_dados <- mapa %>% 
+  inner_join(dados_ibge, c("City" = "CodMun")) %>% 
+  rename(pop = `POP EST`,
+         catPop = `CLASSE POP`)
+
+
+mapa <- ggplot(mapa_dados) + 
+  geom_sf(aes(fill = pop), color = NA) + 
+  scale_fill_viridis(direction = -1, labels = function(x){format(x/1e3, decimal.mark = ",", big.mark = ".")}) + 
+  labs(fill = "População") +
+  theme_classic() + 
+  theme(axis.line = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        text = element_text(family = "Source Sans Pro"))
+
+plot_gg(mapa,multicore=TRUE,width=5,height=5,scale=250)
+```
