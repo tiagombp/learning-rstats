@@ -32,13 +32,20 @@ mapa <- ggplot(mapa_dados) +
   theme(axis.line = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank(),
-        text = element_text(family = "Source Sans Pro"))
+        text = element_text(family = "Source Sans Pro"),
+        legend.position = "bottom")
 
-plot_gg(mapa,multicore=TRUE,width=6,height=6,scale=400)
+#render_depth(focallength=100,focus=0.72)
+
+plot_gg(mapa,multicore=TRUE,width=8,height=8,scale=350)
+render_camera(fov = 70, zoom = 0.5, theta = 130, phi = 35)
+render_camera(fov = 45, zoom = 0.35, theta = 10, phi = 40)
+# phi: azimuth
+# theta: rotação
 
 render_movie("teste.mp4")
 
-#render_depth(focallength=100,focus=0.72)
+#
 #render_camera()
 
 
