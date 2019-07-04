@@ -28,17 +28,19 @@ mapa_dados <- mapa %>%
 mapa <- ggplot(mapa_dados) + 
   geom_sf(aes(fill = pop), color = NA) + 
   scale_fill_viridis(direction = -1,
+                     #option = "magma",
                      #breaks = c(1e3, 100e3, 10000e3),
                      #trans = "log", #para usar uma escala de log
-                     labels = function(x){format(x/1e3, decimal.mark = ",", big.mark = ".")}) + 
-  labs(fill = "População \n(milhares)") +
+                     labels = function(x){format(x/1e6, decimal.mark = ",", big.mark = ".")}) + 
+  labs(fill = "População \n(milhões)") +
   theme_classic() + 
   theme(axis.line = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank(),
         text = element_text(family = "Source Sans Pro"),
-        legend.position = "bottom")
-
+        legend.position = "bottom",
+        legend.text = element_text(size = 10))
+scale_fill_viri
 #render_depth(focallength=100,focus=0.72)
 
 plot_gg(mapa,multicore=TRUE,width=8,height=8,scale=350)
@@ -47,7 +49,7 @@ render_camera(fov = 45, zoom = 0.45, theta = 10, phi = 40)
 # phi: azimuth
 # theta: rotação
 # dá para passar vetores de zoom, fov, theta e phi para fazer a câmera passear.
-
+render_snapshot("brasil3d.png")
 render_movie("teste.mp4")
 
 #
