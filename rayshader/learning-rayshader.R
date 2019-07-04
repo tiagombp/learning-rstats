@@ -23,11 +23,15 @@ mapa_dados <- mapa %>%
   rename(pop = `POP EST`,
          catPop = `CLASSE POP`)
 
+# como a área inteira do município é projetada, o mais lógico talvez fosse usar a densidade média no município, e não a população.
 
 mapa <- ggplot(mapa_dados) + 
   geom_sf(aes(fill = pop), color = NA) + 
-  scale_fill_viridis(direction = -1, labels = function(x){format(x/1e3, decimal.mark = ",", big.mark = ".")}) + 
-  labs(fill = "População") +
+  scale_fill_viridis(direction = -1,
+                     #breaks = c(1e3, 100e3, 10000e3),
+                     #trans = "log", #para usar uma escala de log
+                     labels = function(x){format(x/1e3, decimal.mark = ",", big.mark = ".")}) + 
+  labs(fill = "População \n(milhares)") +
   theme_classic() + 
   theme(axis.line = element_blank(),
         axis.text = element_blank(),
@@ -39,9 +43,10 @@ mapa <- ggplot(mapa_dados) +
 
 plot_gg(mapa,multicore=TRUE,width=8,height=8,scale=350)
 render_camera(fov = 70, zoom = 0.5, theta = 130, phi = 35)
-render_camera(fov = 45, zoom = 0.35, theta = 10, phi = 40)
+render_camera(fov = 45, zoom = 0.45, theta = 10, phi = 40)
 # phi: azimuth
 # theta: rotação
+# dá para passar vetores de zoom, fov, theta e phi para fazer a câmera passear.
 
 render_movie("teste.mp4")
 
