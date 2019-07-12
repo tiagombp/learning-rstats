@@ -38,14 +38,22 @@ mapa <- ggplot(mapa_dados) +
         axis.text = element_blank(),
         axis.ticks = element_blank(),
         text = element_text(family = "Source Sans Pro"),
-        legend.position = "bottom",
-        legend.text = element_text(size = 10))
-scale_fill_viri
+        legend.position = "none",
+        legend.text = element_text(size = 10),
+        plot.background = element_blank(),
+        panel.background = element_blank())
+
 #render_depth(focallength=100,focus=0.72)
 
-plot_gg(mapa,multicore=TRUE,width=8,height=8,scale=350)
+plot_gg(mapa,multicore=TRUE,width=12,height=12,scale=350)
 render_camera(fov = 70, zoom = 0.5, theta = 130, phi = 35)
+render_camera(fov = 75, zoom = 0.45, theta = 0, phi = 40)
+render_camera(fov = 45, zoom = 0.35, theta = 0, phi = 30)
+render_camera(fov = 45, zoom = 0.35, theta = 0, phi = 30)
+render_camera(fov = 45, zoom = 0.25, theta = 0, phi = 30)
+render_camera(fov = 15, zoom = 0.25, theta = 0, phi = 30)
 render_camera(fov = 45, zoom = 0.45, theta = 10, phi = 40)
+render_camera(fov = 45, zoom = 0.35, theta = 10, phi = 40)
 # phi: azimuth
 # theta: rotação
 # dá para passar vetores de zoom, fov, theta e phi para fazer a câmera passear.
