@@ -28,7 +28,7 @@ mapa_dados <- mapa %>%
 mapa <- ggplot(mapa_dados) + 
   geom_sf(aes(fill = pop), color = NA) + 
   scale_fill_viridis(direction = -1,
-                     #option = "magma",
+                     option = "magma",
                      #breaks = c(1e3, 100e3, 10000e3),
                      #trans = "log", #para usar uma escala de log
                      labels = function(x){format(x/1e6, decimal.mark = ",", big.mark = ".")}) + 
@@ -46,10 +46,12 @@ mapa <- ggplot(mapa_dados) +
 #render_depth(focallength=100,focus=0.72)
 
 plot_gg(mapa,multicore=TRUE,width=12,height=12,scale=350)
-render_camera(fov = 70, zoom = 0.5, theta = 130, phi = 35)
+render_camera(fov = 70, zoom = 0.5, theta = 20, phi = 35)
 render_camera(fov = 75, zoom = 0.45, theta = 0, phi = 40)
 render_camera(fov = 45, zoom = 0.35, theta = 0, phi = 30)
-render_camera(fov = 45, zoom = 0.35, theta = 0, phi = 30)
+render_camera(fov = 45, zoom = 0.35, theta = 10, phi = 50)
+render_camera(fov = 90, zoom = 0.15, theta = 10, phi = 20)
+
 render_camera(fov = 45, zoom = 0.25, theta = 0, phi = 30)
 render_camera(fov = 15, zoom = 0.25, theta = 0, phi = 30)
 render_camera(fov = 45, zoom = 0.45, theta = 10, phi = 40)
