@@ -232,3 +232,8 @@ y %>%
   mutate_all(.funs = list(`>0` = ~(. > 0))) %>%
   mutate(or  = a | b | c,
          and = a & b & c)
+
+
+# gganimate shadow apenas de algumas camadas ------------------------------
+
++ shadow_mark(exclude_layer = 2)  # o número da camada a excluir. assumi até agora que o número é a ordem em que elas aparecem no objeto ggplot.
