@@ -237,3 +237,33 @@ y %>%
 # gganimate shadow apenas de algumas camadas ------------------------------
 
 + shadow_mark(exclude_layer = 2)  # o número da camada a excluir. assumi até agora que o número é a ordem em que elas aparecem no objeto ggplot.
+
+
+# slopegraph com ajuste de margens (margin) e vetor de posicioname --------
+
+load("desp_extremos.RData")
+
+slope <- ggplot(desp_extremos, aes(x = Periodo, 
+                                   y = valor, 
+                                   color = classificador,
+                                   group = classificador)) +
+  geom_point(size = 3) +
+  geom_line(size = .5) +
+  geom_text(aes(label = ifelse(Periodo == 1,
+                               paste0(classificador, "  ", round(valor,0), " bi  "),
+                               paste0("  ", round(valor,0), " bi  (", var, ")")),
+                y = ifelse(Periodo == 1, valor,
+                           valor + c(0,0,.5,0,-10,0,-2.7,0))),
+            hjust = "outward", vjust = "center",
+            family = "Open Sans Condensed") +
+  labs(y = NULL, x = NULL) +
+  coord_cartesian(clip = "off", expand = FALSE) +
+  #scale_x_discrete(expand = expand_scale(add = c(0, 0))) +
+  scale_color_manual(values = paleta_darker) +
+  tema() + theme(axis.line = element_blank(),
+                 axis.text = element_blank(),
+                 axis.ticks = element_blank(),
+                 plot.margin =  margin(.5, 3, 0, 4.7, "cm"))
+
+ggsave(plot = slope, "slope.png", h = 7, w = 5, type = "cairo-png")
+
