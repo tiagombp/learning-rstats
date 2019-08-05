@@ -59,6 +59,10 @@ dados <- dados %>%
   mutate(Data = as.Date(paste(Exercício, num_Mes, "01", sep = "-")))
 
 
+# fazer uma operação em cima dos valores de colunas cujos nomes se --------
+# sejam números
+
+mutate_at(.vars = vars(matches('\\d')), .funs = ~.*1e3)
 
 
 # preencher uma coluna com o último valor válido
@@ -170,6 +174,10 @@ scale_color_viridis(#...
                     guide = guide_colourbar(ticks = FALSE)) 
 
 
+# para não exibir uma legenda específica (tipo color, ou fill) ------------
+
++ guides(color = "none")
+# https://ggplot2.tidyverse.org/reference/guides.html
 
 # gganimate - remover o aspecto pixelado de linhas e pontos ---------------
 
@@ -267,3 +275,35 @@ slope <- ggplot(desp_extremos, aes(x = Periodo,
 
 ggsave(plot = slope, "slope.png", h = 7, w = 5, type = "cairo-png")
 
+
+
+# mapas (sumarizar, colorir municípios e mostrar bordas estados) ----------
+
+# dá para a partir de um mapa de município gerar o mapa de estados, só por meio de um summarise
+
+library(brazilmaps)
+library(sf)
+
+mapa_mun <- get_brmap("City") 
+
+mapa_uf <- mapa_mun %>% group_by(State) %>% summarise()
+
+# obvio que dava pra fazer tb (e, por sinal, fica menor na memória):
+mapa_uf2 <- get_brmap("State") 
+
+
+# anotações ---------------------------------------------------------------
+
+  annotate("rect", ymin = quantile(dados_roe$ROE, 0.1), ymax = quantile(dados_roe$ROE, 0.9), fill = 'YellowGreen', xmin = -Inf, xmax = +Inf, alpha = 0.1) +
+  geom_hline(yintercept = quantile(dados_roe$ROE, 0.9), linetype = "dotted") +
+  geom_hline(yintercept = quantile(dados_roe$ROE, 0.1), linetype = "dotted") +
+  annotate("text", x = 0.2, y = quantile(dados_roe$ROE, 0.9), vjust = -0.5,
+         label = percent(quantile(dados_roe$ROE, 0.9), accuracy = 0.1), hjust = "inward", family = "Lora", color = cor_anotacoes, size = 3.5) +
+  annotate("text", x = 0.2, y = quantile(dados_roe$ROE, 0.1), vjust = 1.4,
+           label = percent(quantile(dados_roe$ROE, 0.1), accuracy = 0.1), hjust = "inward", family = "Lora", color = cor_anotacoes, size = 3.5) +
+  annotate("curve", x = 0.5, xend = 0.55, 
+           yend = 1, y = quantile(dados_roe$ROE, 0.5),
+           curvature = -0.2, linetype = "dotted", color = cor_anotacoes) +
+  labs(title = "Distribuição do ROE das empresas", x = NULL, y = NULL) +
+  annotate("text", x = 0.55, y = 1,
+           label = "80% das empresas têm ROE nessa faixa", hjust = "inward", family = "Lora", size = 3, color = cor_anotacoes, fontface = "italic") +
