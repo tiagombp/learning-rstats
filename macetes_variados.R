@@ -307,3 +307,11 @@ mapa_uf2 <- get_brmap("State")
   labs(title = "Distribuição do ROE das empresas", x = NULL, y = NULL) +
   annotate("text", x = 0.55, y = 1,
            label = "80% das empresas têm ROE nessa faixa", hjust = "inward", family = "Lora", size = 3, color = cor_anotacoes, fontface = "italic") +
+
+  
+
+# problema acnetuação gganimate -------------------------------------------
+
+## quando vc importa uma coluna do excel, pode dar erro de acentuação / encoding no gganimate.
+  
+# a solução que tenho a sugerir, da qual não me orgulho kkkk, seria pegar a coluna que tem os labels, pegar os "níveis" dela (usando um unique(df$coluna_com_labels) ), reescrever esses níveis na mão (tipo labels_nao_cagados <- c("Ácéntôs_pra_que_te_quero", ...) ), e transformar a coluna original do dataframe em fator, passando esses nomes que vc escreveu na mão como o argumento levels (tipo, df$coluna_com_labels <- factor(df$coluna_com_labels, levels = labels_nao_cagados) )
