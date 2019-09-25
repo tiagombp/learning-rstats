@@ -1,0 +1,94 @@
+---
+title: "course-notes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# How do you install a package from CRAN?
+# How do you install a package from GitHub
+# How does installing a package change your
+# computer?
+
+# What is a library?
+# Where's your default library?
+# Which libraries are searched for packages?
+# How many packages do you have installed?
+
+```{r}
+.Library
+.libPaths()
+installed.packages()
+```
+
+When you install a package, a file will be downloaded and unzipped inside the library directory.
+
+```{r}
+lista <- installed.packages() %>%
+  as_tibble() %>%
+  select(1:4)
+
+lista %>%
+  count(Priority)
+
+lista %>%
+  filter(...)
+```
+
+# What packages do you currently have attached?
+# What libraries did they come from?
+
+```{r}
+search()
+searchpaths()
+```
+
+
+# How does library() affect these functions?
+
+```{r}
+library(tidyverse)
+search()
+searchpaths()
+```
+
+quando você escreve o nome de uma função, R vai procurar em toda a lista do `search()`, na ordem. Na Global Environment, depois nos outros pacotes. E `searchpaths()` mostra onde estão esses pacotes nos diretórios.
+
+Base package is the lowest level package.
+
+R --vanilla
+
+no terminal
+
+when you call library for a package, R will add this package to the searchpath.
+
+## The Whole Game
+
+A package is a set of
+conventions that
+(with the right tools)
+makes your life easier 
+
+```{r}
+usethis::create_package("~/foofactors")
+```
+
+In a installed package directory, in the R folder, you won't find any R code. It's kinda compilled.
+
+`usethis::use_r("fbind")` creates a function named "fbind", using the convention.
+
+factors under the hood are simply integer.
+
+devtools::load_all() ~~ install.packages() + library()
+
+não usar packages de análise no Rprofile, pq prejudica reprodutibilidade.
+
+document() ~~ control + shift + I
+
+## tests
+
+a bit like double-entry bookkeeping
+
+

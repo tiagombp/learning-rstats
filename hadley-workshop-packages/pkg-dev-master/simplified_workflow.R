@@ -1,0 +1,10 @@
+usethis::create_package("~/Documents/GitHub/foofactors")
+usethis::use_r("fbind")
+usethis::use_gpl3_license("foofactors")
+devtools::check()
+devtools::load_all()
+# roxygen documentation
+document()
+use_test()
+test()
+test_coverage()
