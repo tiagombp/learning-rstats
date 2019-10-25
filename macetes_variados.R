@@ -308,6 +308,10 @@ mapa_uf2 <- get_brmap("State")
   annotate("text", x = 0.55, y = 1,
            label = "80% das empresas têm ROE nessa faixa", hjust = "inward", family = "Lora", size = 3, color = cor_anotacoes, fontface = "italic") +
 
+
+# inverter ordem na legenda -----------------------------------------------
+
++guides(fill = guide_legend(reverse=TRUE))  
   
 
 # problema acnetuação gganimate -------------------------------------------
