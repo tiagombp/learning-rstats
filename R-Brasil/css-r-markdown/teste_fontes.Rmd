@@ -1,0 +1,36 @@
+---
+title: "Teste de parágrafos"
+output: html_document
+---
+
+```{css, echo=FALSE}
+#primeiro-titulo > p:nth-of-type(2) {
+  font-family: Georgia;
+  color: red;
+}
+
+#primeiro-titulo > p:nth-of-type(3) {
+  font-family: Impact;
+  color: green;
+}
+
+#meu-super-paragrafo-especial {
+  background-color: goldenrod;
+}
+```
+
+# Primeiro título
+
+<p style = "font-family: Verdana; color: blue">Parágrafo 1</p>
+
+Parágrafo 2
+
+Parágrafo 3
+
+## Primeiro subtítulo
+
+Parágrafo 1, que não vai ser afetado.
+
+Parágrafo 2, que tampouco vai ser afetado.
+
+<p id = "meu-super-paragrafo-especial">Parágrado especial.</p>
