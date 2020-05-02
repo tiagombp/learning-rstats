@@ -319,3 +319,25 @@ mapa_uf2 <- get_brmap("State")
 ## quando vc importa uma coluna do excel, pode dar erro de acentuação / encoding no gganimate.
   
 # a solução que tenho a sugerir, da qual não me orgulho kkkk, seria pegar a coluna que tem os labels, pegar os "níveis" dela (usando um unique(df$coluna_com_labels) ), reescrever esses níveis na mão (tipo labels_nao_cagados <- c("Ácéntôs_pra_que_te_quero", ...) ), e transformar a coluna original do dataframe em fator, passando esses nomes que vc escreveu na mão como o argumento levels (tipo, df$coluna_com_labels <- factor(df$coluna_com_labels, levels = labels_nao_cagados) )
+
+
+
+# funções com dplyr -------------------------------------------------------
+
+## um exemplo:
+
+plota_sumario <- function(variavel) {
+  
+  quo_var <- enquo(variavel)
+  
+  ggplot(honras_simples_pre %>%
+           group_by(!! quo_var) %>%
+           summarise(valor = sum(valor)),
+         aes(y = reorder(!! quo_var, valor), x = valor)) +
+    geom_col()
+}
+
+# ver https://dplyr.tidyverse.org/articles/programming.html
+# !!enquo(variavel)
+
+
