@@ -34,7 +34,7 @@ exportar <- gera_grid(new_grid)
 
 #testa
 ggplot(exportar, aes(x = x, y = y)) + 
-  geom_point(color = 'tomato')  + 
+  geom_point()  + 
   scale_y_reverse()
 
 #grava / exporta
