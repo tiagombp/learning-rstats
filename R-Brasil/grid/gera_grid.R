@@ -33,7 +33,9 @@ gera_grid <- function(grid_inicial) {
 exportar <- gera_grid(new_grid)
 
 #testa
-ggplot(exportar, aes(x = x, y = y)) + geom_point()  + scale_y_reverse()
+ggplot(exportar, aes(x = x, y = y)) + 
+  geom_point(color = 'tomato')  + 
+  scale_y_reverse()
 
-#grava
+#grava / exporta
 write.csv(exportar, file = "grid.csv")
