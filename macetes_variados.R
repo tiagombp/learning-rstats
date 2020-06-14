@@ -7,6 +7,9 @@ as.Date(42705, origin = "1899-12-30")
 ggplot(mtcars, aes(wt, mpg)) + geom_path(aes(color = "path")) + geom_line(aes(color = "line"))
 
 
+# importando fontes -------------------------------------------------------
+
+extrafont::ttf_import("C:/Users/familia/Downloads/fonts/")
 
 # rstats performance tip: if you must grow a vector in a loop, make sure there's only one reference to it so that R doesn't have to make a copy on each iteration.
 
