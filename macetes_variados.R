@@ -188,6 +188,11 @@ animate(#nome do objeto,
   type = "cairo")
 
 
+# gganimate problema com acentos ------------------------------------------
+
+geom_text(aes(label = enc2native(coluna_do_label)))
+
+
 
 # acompanhar execução de código -------------------------------------------
 
@@ -344,3 +349,7 @@ plota_sumario <- function(variavel) {
 # !!enquo(variavel)
 
 
+
+# NAs ---------------------------------------------------------------------
+
+mutate_at(.vars = vars(-time_minute), .funs = ~replace(., is.na(.), 0)) %>%
