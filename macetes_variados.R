@@ -352,4 +352,14 @@ plota_sumario <- function(variavel) {
 
 # NAs ---------------------------------------------------------------------
 
-mutate_at(.vars = vars(-time_minute), .funs = ~replace(., is.na(.), 0)) %>%
+mutate_at(.vars = vars(-time_minute), .funs = ~replace(., is.na(.), 0))
+  
+
+# quantas ocorrências únicas de uma determinada variável? -----------------
+
+> ploa %>% select(acao) %>% unique() %>% unlist() %>% length()
+[1] 1185
+> ploa %>% select(acao) %>% unique() %>% nrow()
+[1] 1185
+> ploa %>% select(acao) %>% distinct() %>% nrow()
+[1] 1185  
