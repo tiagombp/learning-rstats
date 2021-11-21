@@ -299,6 +299,7 @@ mapa_uf <- mapa_mun %>% group_by(State) %>% summarise()
 # obvio que dava pra fazer tb (e, por sinal, fica menor na memória):
 mapa_uf2 <- get_brmap("State") 
 
+# quando usar o geojsonsf::sf_geojson, escrever o arquivo json usando o write_file, e não o write_json!!!    
 
 # anotações ---------------------------------------------------------------
 
